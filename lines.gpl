@@ -3,6 +3,8 @@
 # plot and draw lines http://stackoverflow.com/questions/16541040/how-do-i-use-gnuplot-to-plot-a-simple-2d-vector-arrow
 # http://www.gnuplot.info/demo/arrowstyle.html
 # plot labels (Ids) at point coords http://stackoverflow.com/questions/14608900/how-to-label-x-y-data-points-in-gnuplot-4-2-with-integer-numbers
+# http://gnuplot.sourceforge.net/demo/datastrings.html
+# arithmetic on columns (and fit to function) https://chemistry.osu.edu/~foster.281/gnuplot/gnuplot_tutorial3_files/gp_manip.html
 
 ## call as 
 ## gnuplot -e "datafile='z-slice.lst'" ~/gnuplot/lines.gpl
@@ -12,12 +14,14 @@ if (!exists("datafile")) datafile='default.dat'
 set terminal svg enhanced font "arial,10" size 800,800 #with enhanced don't use: courier
 set output "lines.svg"
 
-set xrange [1:4336]
+scale=0.331662
+
+set xrange [1:4336*scale]
 #set xrange [0:101]
 set size ratio -1
 
 #set arrow from $1,0 to $1,100 nohead 
-plot datafile using 1:(0):(0):(500) notitle with vectors nohead lc 'black', \
-     datafile using 1:(0):1 notitle with labels # offset -10 
+plot datafile using ($1*scale):(0):(0):(500*scale) notitle with vectors nohead lc 'black', \
+     datafile using ($1*scale):(0):($1*scale) notitle with labels center
 
 
