@@ -1,0 +1,23 @@
+# command line variables http://stackoverflow.com/questions/12328603/how-to-pass-command-line-argument-to-gnuplot
+# inline data: http://stackoverflow.com/questions/4981279/how-to-make-several-plots-from-the-same-standard-input-data-in-gnuplot
+# plot and draw lines http://stackoverflow.com/questions/16541040/how-do-i-use-gnuplot-to-plot-a-simple-2d-vector-arrow
+# http://www.gnuplot.info/demo/arrowstyle.html
+# plot labels (Ids) at point coords http://stackoverflow.com/questions/14608900/how-to-label-x-y-data-points-in-gnuplot-4-2-with-integer-numbers
+
+## call as 
+## gnuplot -e "datafile='z-slice.lst'" ~/gnuplot/lines.gpl
+
+if (!exists("datafile")) datafile='default.dat'
+
+set terminal svg enhanced font "arial,10" size 800,800 #with enhanced don't use: courier
+set output "lines.svg"
+
+set xrange [1:4336]
+#set xrange [0:101]
+set size ratio -1
+
+#set arrow from $1,0 to $1,100 nohead 
+plot datafile using 1:(0):(0):(500) notitle with vectors nohead lc 'black', \
+     datafile using 1:(0):1 notitle with labels # offset -10 
+
+
