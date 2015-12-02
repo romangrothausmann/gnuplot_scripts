@@ -17,7 +17,7 @@ set terminal svg enhanced font "arial,10" size 800,800 #with enhanced don't use:
 set output "lines.svg"
 
 set xrange [0:4336*scale]
-#set xrange [0:101]
+set yrange [0:500*scale]
 set size ratio -1
 
 #set arrow from $1,0 to $1,100 nohead 
