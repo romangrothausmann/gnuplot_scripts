@@ -5,6 +5,7 @@
 # plot labels (Ids) at point coords http://stackoverflow.com/questions/14608900/how-to-label-x-y-data-points-in-gnuplot-4-2-with-integer-numbers
 # http://gnuplot.sourceforge.net/demo/datastrings.html
 # arithmetic on columns (and fit to function) https://chemistry.osu.edu/~foster.281/gnuplot/gnuplot_tutorial3_files/gp_manip.html
+# interpret as number and print string http://stackoverflow.com/questions/5242253/how-to-convert-integer-to-string-in-gnuplot
 
 ## call as 
 ## gnuplot -e "datafile='z-slice.lst'" ~/gnuplot/lines.gpl
@@ -22,6 +23,6 @@ set size ratio -1
 
 #set arrow from $1,0 to $1,100 nohead 
 plot datafile using ($1*scale):(0):(0):(500*scale) notitle with vectors nohead lc 'black', \
-     datafile using ($1*scale):(0):($1*scale) notitle with labels center
+     datafile using ($1*scale):(0):(sprintf("%5.2f", $1*scale)) notitle with labels center
 
 
