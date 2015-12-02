@@ -8,16 +8,15 @@
 # interpret as number and print string http://stackoverflow.com/questions/5242253/how-to-convert-integer-to-string-in-gnuplot
 
 ## call as 
-## gnuplot -e "datafile='z-slice.lst'" ~/gnuplot/lines.gpl
+## gnuplot -e "datafile='z-slice.lst';scale=0.331662" ~/gnuplot/lines.gpl
 
 if (!exists("datafile")) datafile='default.dat'
+if (!exists("scale")) scale=1.0 # http://gnuplot.sourceforge.net/docs_4.2/node60.html
 
 set terminal svg enhanced font "arial,10" size 800,800 #with enhanced don't use: courier
 set output "lines.svg"
 
-scale=0.331662
-
-set xrange [1:4336*scale]
+set xrange [0:4336*scale]
 #set xrange [0:101]
 set size ratio -1
 
