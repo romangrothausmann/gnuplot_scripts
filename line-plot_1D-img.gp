@@ -10,7 +10,7 @@ if (!exists("outfile")) outfile='line-plot_1D-img.svg' # use ARG0."svg" for gp-5
 df1= word(datafiles,1)
 df2= word(datafiles,2)
 
-set terminal svg enhanced font "arial,10" size 800,800 #with enhanced don't use: courier
+set terminal svg enhanced font "arial,10" size 800,600 #with enhanced don't use: courier
 set output outfile
 
 
@@ -35,5 +35,5 @@ set style fill solid
 
 plot df2 u 0:(255 * !(int($1) && int($2) && int($3))) w fillsteps lt rgb "black" t "tissue", \
 for [i=3:1:-1] df2 u i w fillsteps ls i t columnheader, \
-df1 w steps lt rgb "#ffffff" lw 3 t "orig", \
-"" u ($0+0.5):1 smooth cspline lt rgb "#888888" lw 2 t " smooth"
+df1 w steps lt rgb "#eeeeee" lw 3 t "orig (inv)", \
+"" u ($0+0.5):1 smooth cspline lt rgb "#888888" lw 2 t " smoothed"
