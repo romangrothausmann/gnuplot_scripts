@@ -34,6 +34,12 @@ set style fill solid
 #set style fill transparent pattern 4 bo
 
 plot df2 u 0:(255 * !(int($1) && int($2) && int($3))) w fillsteps lt rgb "black" t "tissue", \
-for [i=3:1:-1] df2 u i w fillsteps ls i t columnheader, \
+for [i=3:1:-1] df2 u (column(i) + 3*i - 3*3) w fillsteps ls i t columnheader, \
 df1 w steps lt rgb "#eeeeee" lw 3 t "orig (inv)", \
 "" u ($0+0.5):1 smooth cspline lt rgb "#888888" lw 2 t " smoothed"
+
+# set multiplot
+# do for [i=3:1:-1] {
+#     plot df2 u 0:(column(i)+i) w fillsteps ls i,  \
+#       df1 u ($0+0.5):1 smooth cspline lt rgb "#888888" lw 2
+# }
