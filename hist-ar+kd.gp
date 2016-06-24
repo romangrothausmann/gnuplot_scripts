@@ -1,5 +1,6 @@
 ### gnuplot script to create a histogram with abs. and rel. scale and kernel-density plot
 
+if (GPVAL_VERSION < 5.0) {print "This script needs gnuplot-5.x\n"; exit;}
 
 if (!exists("datafile")) datafile='default.dat' # http://gnuplot.sourceforge.net/docs_4.2/node60.html
 if (!exists("outfile")) outfile='hist-ar+kd.svg' # use ARG0."svg" for gp-5:  http://stackoverflow.com/questions/12328603/how-to-pass-command-line-argument-to-gnuplot#31815067
@@ -8,7 +9,7 @@ if (!exists("bin")) bin=17
 if (!exists("sigma")) sigma=0
 if (!exists("xmin")) xmin=0
 if (!exists("xmax")) xmax=180
-if (!exists("col")) col=1
+if (!exists("col")) col='interplanarAngles' # http://stackoverflow.com/questions/16089301/how-do-i-set-axis-label-with-column-header-in-gnuplot#18309074
 if (!exists("sep")) sep=whitespace
 
 set datafile separator sep
@@ -45,13 +46,13 @@ set output outfile
 
 set style fill transparent solid .7
 
-set style line 1 lt 2 lc rgb "#000000" lw 1
-set style line 2 lt 1 lc rgb "#00ff00"
-set style line 3 lt 1 lc rgb "#0000ff"
+set style line 1 dt 4 lc rgb "#11000000" lw 2
+set style line 2 dt 1 lc rgb "#00ff00"
+set style line 3 dt 1 lc rgb "#0000ff"
 
 ## gp-4.6: kdensity with filledcurves gets accepted but does not work (http://gnuplot.sourceforge.net/demo_cvs/violinplot.html)
 plot \
      "" u (binc(column(col), bin)):(1) axes x1y2 smooth frequency with boxes ti sprintf("%d values (abs. freq)", STATS_records) ls 3 , \
-     "" u (binc(column(col), bin)):(1. / bin / STATS_records) smooth frequency with boxes fs pattern 4 ti sprintf("%d values (rel. freq)", STATS_records) ls 1 , \
-     "" u col:(1. / STATS_records):(sigma) smooth kdensity with filledcurves above y1 fs solid ti "" ls 2 , \
-     "" u col:(1. / STATS_records):(sigma) smooth kdensity ti sprintf("kdensity ({/symbol s}= %2.1f; rel. freq)", sigma) ls 2  # 3rd u-value is used but warning issued: extra columns ignored by smoothing option
+     "" u (binc(column(col), bin)):(1. / bin / STATS_records) smooth frequency with boxes fs empty ti "(rel. freq)" ls 1 , \
+     "" u col:(1. / STATS_records) smooth kdensity bandwidth sigma with filledcurves above y1 ti sprintf("kdensity ({/symbol s}= %2.1f; rel. freq)", sigma) ls 2 # for gp-5.x
+#     "" u col:(1. / STATS_records):(sigma) smooth kdensity ti sprintf("kdensity ({/symbol s}= %2.1f; rel. freq)", sigma) ls 2 # gp<5: 3rd u-value is used but warning issued: extra columns ignored by smoothing option
