@@ -53,10 +53,15 @@ set style line 3 dt 1 lc rgb "#0000ff"
 
 set style circle radius 1.1 # http://stackoverflow.com/questions/34532568/gnuplot-how-to-make-scatter-plots-with-transparent-points#34533791
 
+## filledcurves work-around for kdensity: https://sourceforge.net/p/gnuplot/mailman/message/35195264/
+set table $SMOOTHED
+plot datafile u col:(1. / STATS_records) smooth kdensity bandwidth sigma ti ''
+unset table
+
 ## gp-4.6: kdensity with filledcurves gets accepted but does not work (http://gnuplot.sourceforge.net/demo_cvs/violinplot.html)
 plot \
      "" u col:(0.0002*rand(0)-.00045) with circles fs fill transparent solid 0.35 noborder lc 'black' t '', \
      "" u (binc(column(col), bin)):(1) axes x1y2 smooth frequency with boxes ti sprintf("%d values (abs. freq)", STATS_records) ls 3 , \
      "" u (binc(column(col), bin)):(1. / bin / STATS_records) smooth frequency with boxes fs empty ti "(rel. freq)" ls 1 , \
-     "" u col:(1. / STATS_records) smooth kdensity bandwidth sigma with filledcurves above y1 ti sprintf("kdensity ({/symbol s}= %2.1f; rel. freq)", sigma) ls 2 # for gp-5.x
+     $SMOOTHED u 1:2 with filledcurves y=0 ti sprintf("kdensity ({/symbol s}= %2.1f; rel. freq)", sigma) ls 2 # for gp-5.x
 #     "" u col:(1. / STATS_records):(sigma) smooth kdensity ti sprintf("kdensity ({/symbol s}= %2.1f; rel. freq)", sigma) ls 2 # gp<5: 3rd u-value is used but warning issued: extra columns ignored by smoothing option
