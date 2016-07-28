@@ -21,4 +21,5 @@ set output outfile
 
 plot \
      imgfile binary filetype=png w rgbimage ti '' , \
-     datfile u ($1/8):(ymax-$2/8)  pointtype 2 pointsize 5 lc 'yellow' ti ''
+     datfile u ($1/8):(ymax-$2/8) pointtype 2 pointsize 3 lc 'yellow' ti '' , \
+     datfile u ($1/8):(ymax-$2/8):($0+1) w labels left offset 1 textcolor 'yellow' font "sans,40" notitle
