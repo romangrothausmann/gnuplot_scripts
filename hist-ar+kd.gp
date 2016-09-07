@@ -1,6 +1,6 @@
 ### gnuplot script to create a histogram with abs. and rel. scale and kernel-density plot
 
-if (GPVAL_VERSION < 5.0) {print "This script needs gnuplot-5.x\n"; exit;}
+if (!( GPVAL_VERSION >= 5.1 || ( GPVAL_VERSION == 5.0 && GPVAL_PATCHLEVEL >= 4) )) {print "This script needs at least gnuplot-5.0.4\n"; exit;}
 
 if (!exists("datafile")) datafile='default.dat' # http://gnuplot.sourceforge.net/docs_4.2/node60.html
 if (!exists("outfile")) outfile='hist-ar+kd.svg' # use ARG0."svg" for gp-5:  http://stackoverflow.com/questions/12328603/how-to-pass-command-line-argument-to-gnuplot#31815067
