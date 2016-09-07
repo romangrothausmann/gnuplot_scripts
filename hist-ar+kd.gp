@@ -1,6 +1,6 @@
 ### gnuplot script to create a histogram with abs. and rel. scale and kernel-density plot
 
-if (GPVAL_VERSION < 5.0) {print "This script needs gnuplot-5.x\n"; exit;}
+if (!( GPVAL_VERSION >= 5.1 || ( GPVAL_VERSION == 5.0 && GPVAL_PATCHLEVEL >= 4) )) {print "This script needs at least gnuplot-5.0.4\n"; exit;}
 
 if (!exists("datafile")) datafile='default.dat' # http://gnuplot.sourceforge.net/docs_4.2/node60.html
 if (!exists("outfile")) outfile='hist-ar+kd.svg' # use ARG0."svg" for gp-5:  http://stackoverflow.com/questions/12328603/how-to-pass-command-line-argument-to-gnuplot#31815067
@@ -58,5 +58,5 @@ plot \
      "" u col:(0.0002*rand(0)-.00045) with circles fs fill transparent solid 0.35 noborder lc 'black' t '', \
      "" u (binc(column(col), bin)):(1) axes x1y2 smooth frequency with boxes ti sprintf("%d values (abs. freq)", STATS_records) ls 3 , \
      "" u (binc(column(col), bin)):(1. / bin / STATS_records) smooth frequency with boxes fs empty ti "(rel. freq)" ls 1 , \
-     "" u col:(1. / STATS_records) smooth kdensity bandwidth sigma with filledcurves above y1 ti sprintf("kdensity ({/symbol s}= %2.1f; rel. freq)", sigma) ls 2 # for gp-5.x
+     "" u col:(1. / STATS_records) smooth kdensity bandwidth sigma with filledcurves y=0 ti sprintf("kdensity ({/symbol s}= %2.1f; rel. freq)", sigma) ls 2 # for gp-5.x
 #     "" u col:(1. / STATS_records):(sigma) smooth kdensity ti sprintf("kdensity ({/symbol s}= %2.1f; rel. freq)", sigma) ls 2 # gp<5: 3rd u-value is used but warning issued: extra columns ignored by smoothing option
