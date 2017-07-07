@@ -10,9 +10,9 @@ if (!exists("sigma")) sigma=0
 if (!exists("xmin")) xmin=0
 if (!exists("xmax")) xmax=180
 if (!exists("col")) col='interplanarAngles' # http://stackoverflow.com/questions/16089301/how-do-i-set-axis-label-with-column-header-in-gnuplot#18309074
-if (!exists("sep")) sep='whitespace'
+if (exists("sep")) set datafile separator sep
 
-set datafile separator sep
+show  datafile separator
 
 set samples 1000
 set boxwidth bin # very important! see "gnuplot in action" p. 257
