@@ -7,8 +7,6 @@ if (!exists("outfile")) outfile='hist-ar+kd.svg' # use ARG0."svg" for gp-5:  htt
 if (!exists("xlabel")) xlabel='UNSPECIFIED'
 if (!exists("bin")) bin=17
 if (!exists("sigma")) sigma=0
-if (!exists("xmin")) xmin=0
-if (!exists("xmax")) xmax=180
 if (!exists("col")) col='interplanarAngles' # http://stackoverflow.com/questions/16089301/how-do-i-set-axis-label-with-column-header-in-gnuplot#18309074
 if (exists("sep")) set datafile separator sep
 
@@ -24,7 +22,7 @@ binr(x,s)= s* floor(x/s)
 stats datafile u col nooutput # sets e.g. STATS_records
 
 ###first do a dummy plot to determin chosen y-range;-)
-set xrange [xmin:xmax]
+if (exists("xmin") && exists("xmax")) set xrange [xmin:xmax]
 set term dumb
 plot datafile u (binc(column(col), bin)):(1. / bin / STATS_records) smooth frequency with boxes ti sprintf("%d values (rel. freq)", STATS_records)
 ###y-range is now: GPVAL_Y_MAX or use GPVAL_DATA_Y_MAX
