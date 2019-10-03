@@ -35,7 +35,7 @@ print GPVAL_Y_MAX, GPVAL_DATA_Y_MAX
 set yrange  [-0.0006:GPVAL_Y_MAX] # or [0:GPVAL_DATA_Y_MAX], without some small boxes might vanish!
 set y2range [-0.0006 * bin * STATS_records:GPVAL_Y_MAX * bin * STATS_records] #scale yrange to make y2range graph (abs) coincide with relative
 
-set title "relative and absolut frequency plot with error region"
+set title sprintf("relative and absolut frequency plot with error region (%d values)", STATS_records)
 set xlabel xlabel
 set ylabel  "rel. frequency"
 set y2label "abs. frequency"
@@ -79,8 +79,8 @@ unset table
 unset datafile separator # change back to white space for past input
 
 plot \
-     "< paste abs_low.txt abs.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  axes x1y2 ti sprintf("error region low (%d values)", STATS_records) ls 1 , \
-     "< paste abs.txt abs_upp.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  axes x1y2 ti sprintf("error region upp (%d values)", STATS_records) ls 2 , \
+     "< paste abs_low.txt abs.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  axes x1y2 ti "error region low" ls 1 , \
+     "< paste abs.txt abs_upp.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  axes x1y2 ti "error region upp" ls 2 , \
      "< paste rel_low.txt rel.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  ti "" ls 1 , \
      "< paste rel.txt rel_upp.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  ti "" ls 2 , \
      "< sed 's/[[:space:]]\+/\t/g' abs.txt" u 1:2 with lines ti "frequency (abs.)" dt 1 lc rgb "#88000000" lw 2 axes x1y2 , \
