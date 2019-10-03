@@ -53,26 +53,21 @@ set style line 3 dt 1 lc rgb "#0000ff"
 
 set style circle radius 1.1 # http://stackoverflow.com/questions/34532568/gnuplot-how-to-make-scatter-plots-with-transparent-points#34533791
 
-set table $absD  # single plot command avoids the need for append
-plot datafile  u (binc(column(colD), bin)):(1) smooth frequency, \
-     datafileL u (binc(column(colD), bin)):(1) smooth frequency, \
-     datafileU u (binc(column(colD), bin)):(1) smooth frequency
-unset table
-
-set table $relD  # single plot command avoids the need for append
-plot datafile  u (binc(column(colD), bin)):(1. / bin / STATS_records) smooth frequency, \
+set table "low.txt"  # single plot command avoids the need for append
+plot datafileL u (binc(column(colD), bin)):(1) smooth frequency, \
      datafileL u (binc(column(colD), bin)):(1. / bin / STATS_records) smooth frequency, \
-     datafileU u (binc(column(colD), bin)):(1. / bin / STATS_records) smooth frequency
+     datafileL u colD:(1. / STATS_records) smooth kdensity bandwidth sigma
 unset table
 
-set table $kdsD  # single plot command avoids the need for append
-plot datafile  u colD:(1. / STATS_records) smooth kdensity bandwidth sigma, \
-     datafileL u colD:(1. / STATS_records) smooth kdensity bandwidth sigma, \
+set table "upp.txt"  # single plot command avoids the need for append
+plot datafileU u (binc(column(colD), bin)):(1) smooth frequency, \
+     datafileU u (binc(column(colD), bin)):(1. / bin / STATS_records) smooth frequency, \
      datafileU u colD:(1. / STATS_records) smooth kdensity bandwidth sigma
 unset table
 
-## gp-4.6: kdensity with filledcurves gets accepted but does not work (http://gnuplot.sourceforge.net/demo_cvs/violinplot.html)
+unset datafile separator # change back to white space for past input
+
 plot \
-     $absD u 1:2 "%lf  %lf" with boxes axes x1y2 ti sprintf("%d values (abs. freq)", STATS_records) ls 3 , \
-     $relD u 1:2 "%lf  %lf" with boxes fs empty ti "(rel. freq)" ls 1 , \
-     $kdsD u 1:2 "%lf  %lf" with filledcurves ti sprintf("kdensity ({/symbol s}= %2.1f; rel. freq)", sigma) ls 2 # for gp-5.x
+     "< paste low.txt upp.txt | sed 's/[[:space:]]\+/\t/g'" index 0 u 1:2:5 with filledcurves  axes x1y2 ti sprintf("%d values (abs. freq)", STATS_records) ls 3 , \
+     "< paste low.txt upp.txt | sed 's/[[:space:]]\+/\t/g'" index 1 u 1:2:5 with filledcurves  fs empty ti "(rel. freq)" ls 1 , \
+     "< paste low.txt upp.txt | sed 's/[[:space:]]\+/\t/g'" index 2 u 1:2:5 with filledcurves ti sprintf("kdensity ({/symbol s}= %2.1f; rel. freq)", sigma) ls 2 # for gp-5.x
