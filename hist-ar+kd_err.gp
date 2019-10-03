@@ -53,19 +53,25 @@ set style line 3 dt 1 lc rgb "#0000ff"
 
 set style circle radius 1.1 # http://stackoverflow.com/questions/34532568/gnuplot-how-to-make-scatter-plots-with-transparent-points#34533791
 
-set table "low.txt"  # single plot command avoids the need for append
-plot datafileL u (binc(column(colD), bin)):(1) smooth frequency, \
-     datafileL u (binc(column(colD), bin)):(1. / bin / STATS_records) smooth frequency
+set table "abs_low.txt"  # single plot command avoids the need for append
+plot datafileL u (binc(column(colD), bin)):(1) smooth frequency
 unset table
 
-set table "upp.txt"  # single plot command avoids the need for append
-plot datafileU u (binc(column(colD), bin)):(1) smooth frequency, \
-     datafileU u (binc(column(colD), bin)):(1. / bin / STATS_records) smooth frequency
+set table "abs_upp.txt"  # single plot command avoids the need for append
+plot datafileU u (binc(column(colD), bin)):(1) smooth frequency
+unset table
+
+set table "rel_low.txt"  # single plot command avoids the need for append
+plot datafileL u (binc(column(colD), bin)):(1. / bin / STATS_records) smooth frequency
+unset table
+
+set table "rel_upp.txt"  # single plot command avoids the need for append
+plot datafileU u (binc(column(colD), bin)):(1. / bin / STATS_records) smooth frequency
 unset table
 
 unset datafile separator # change back to white space for past input
 
 plot \
-     "< paste low.txt upp.txt | sed 's/[[:space:]]\+/\t/g'" index 0 u 1:2:5 with filledcurves  axes x1y2 ti sprintf("%d values (abs. freq)", STATS_records) ls 3 , \
-     "< paste low.txt upp.txt | sed 's/[[:space:]]\+/\t/g'" index 1 u 1:2:5 with filledcurves  ti "(rel. freq)" ls 2 , \
+     "< paste abs_low.txt abs_upp.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  axes x1y2 ti sprintf("%d values (abs. freq)", STATS_records) ls 3 , \
+     "< paste rel_low.txt rel_upp.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  ti "(rel. freq)" ls 2 , \
      datafile u (binc(column(colD), bin)):(1. / bin / STATS_records) smooth frequency with lines ls 1
