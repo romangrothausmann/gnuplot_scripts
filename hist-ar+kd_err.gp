@@ -47,9 +47,8 @@ set output outfile
 
 set style fill transparent solid .7
 
-set style line 1 dt 1 lc rgb "#ff0000" lw 2
-set style line 2 dt 1 lc rgb "#000000" lw 2
-set style line 3 dt 1 lc rgb "#00ff00"
+set style line 1 dt 1 lc rgb "#ff0000"
+set style line 2 dt 1 lc rgb "#00ff00"
 
 set style circle radius 1.1 # http://stackoverflow.com/questions/34532568/gnuplot-how-to-make-scatter-plots-with-transparent-points#34533791
 
@@ -81,7 +80,8 @@ unset datafile separator # change back to white space for past input
 
 plot \
      "< paste abs_low.txt abs.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  axes x1y2 ti sprintf("error region low (%d values)", STATS_records) ls 1 , \
-     "< paste abs.txt abs_upp.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  axes x1y2 ti sprintf("error region upp (%d values)", STATS_records) ls 3 , \
-     "< paste rel_low.txt rel.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  fs empty  ti "" ls 1 , \
-     "< paste rel.txt rel_upp.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  fs empty  ti "" ls 3 , \
-     "< sed 's/[[:space:]]\+/\t/g' rel.txt" u 1:2 with lines ti "frequency" ls 2
+     "< paste abs.txt abs_upp.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  axes x1y2 ti sprintf("error region upp (%d values)", STATS_records) ls 2 , \
+     "< paste rel_low.txt rel.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  ti "" ls 1 , \
+     "< paste rel.txt rel_upp.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  ti "" ls 2 , \
+     "< sed 's/[[:space:]]\+/\t/g' abs.txt" u 1:2 with lines ti "frequency (abs.)" dt 1 lc rgb "#88000000" lw 2 axes x1y2 , \
+     "< sed 's/[[:space:]]\+/\t/g' rel.txt" u 1:2 with lines ti "frequency (rel.)" dt 4 lc rgb "#88000000" lw 2
