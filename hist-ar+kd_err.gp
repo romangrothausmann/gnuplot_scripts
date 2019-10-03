@@ -7,7 +7,7 @@ if (!exists("outfile")) outfile='hist-ar+kd.svg' # use ARG0."svg" for gp-5:  htt
 if (!exists("xlabel")) xlabel='UNSPECIFIED'
 if (!exists("bin")) bin=17
 if (!exists("sigma")) sigma=0
-if (!exists("col")) col='interplanarAngles' # http://stackoverflow.com/questions/16089301/how-do-i-set-axis-label-with-column-header-in-gnuplot#18309074
+if (!exists("colD")) colD='interplanarAngles' # http://stackoverflow.com/questions/16089301/how-do-i-set-axis-label-with-column-header-in-gnuplot#18309074
 if (exists("sep")) set datafile separator sep
 
 show  datafile separator
@@ -19,12 +19,12 @@ binc(x,s)= s* (int(x/s) + .5)
 binl(x,s)= s* ceil(x/s)
 binr(x,s)= s* floor(x/s)
 
-stats datafile u col nooutput # sets e.g. STATS_records
+stats datafile u colD nooutput # sets e.g. STATS_records
 
 ###first do a dummy plot to determin chosen y-range;-)
 if (exists("xmin") && exists("xmax")) set xrange [xmin:xmax]
 set term dumb
-plot datafile u (binc(column(col), bin)):(1. / bin / STATS_records) smooth frequency with boxes ti sprintf("%d values (rel. freq)", STATS_records)
+plot datafile u (binc(column(colD), bin)):(1. / bin / STATS_records) smooth frequency with boxes ti sprintf("%d values (rel. freq)", STATS_records)
 ###y-range is now: GPVAL_Y_MAX or use GPVAL_DATA_Y_MAX
 print GPVAL_Y_MAX, GPVAL_DATA_Y_MAX
 
@@ -51,10 +51,20 @@ set style line 3 dt 1 lc rgb "#0000ff"
 
 set style circle radius 1.1 # http://stackoverflow.com/questions/34532568/gnuplot-how-to-make-scatter-plots-with-transparent-points#34533791
 
+set table $absD
+plot "" u (binc(column(colD), bin)):(1) smooth frequency
+unset table
+
+set table $relD
+plot "" u (binc(column(colD), bin)):(1. / bin / STATS_records) smooth frequency
+unset table
+
+set table $kdsD
+plot "" u colD:(1. / STATS_records) smooth kdensity bandwidth sigma
+unset table
+
 ## gp-4.6: kdensity with filledcurves gets accepted but does not work (http://gnuplot.sourceforge.net/demo_cvs/violinplot.html)
 plot \
-     "" u col:(0.0002*rand(0)-.00045) with circles fs fill transparent solid 0.35 noborder lc 'black' t '', \
-     "" u (binc(column(col), bin)):(1) axes x1y2 smooth frequency with boxes ti sprintf("%d values (abs. freq)", STATS_records) ls 3 , \
-     "" u (binc(column(col), bin)):(1. / bin / STATS_records) smooth frequency with boxes fs empty ti "(rel. freq)" ls 1 , \
-     "" u col:(1. / STATS_records) smooth kdensity bandwidth sigma with filledcurves y=0 ti sprintf("kdensity ({/symbol s}= %2.1f; rel. freq)", sigma) ls 2 # for gp-5.x
-#     "" u col:(1. / STATS_records):(sigma) smooth kdensity ti sprintf("kdensity ({/symbol s}= %2.1f; rel. freq)", sigma) ls 2 # gp<5: 3rd u-value is used but warning issued: extra columns ignored by smoothing option
+     $absD u 1:2 with boxes axes x1y2 ti sprintf("%d values (abs. freq)", STATS_records) ls 3 , \
+     $relD u 1:2 with boxes fs empty ti "(rel. freq)" ls 1 , \
+     $kdsD u 1:2 with filledcurves ti sprintf("kdensity ({/symbol s}= %2.1f; rel. freq)", sigma) ls 2 # for gp-5.x
