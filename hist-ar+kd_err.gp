@@ -84,4 +84,4 @@ plot \
      "< paste abs.txt abs_upp.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  axes x1y2 ti sprintf("error region upp (%d values)", STATS_records) ls 3 , \
      "< paste rel_low.txt rel.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  fs empty  ti "" ls 1 , \
      "< paste rel.txt rel_upp.txt | sed 's/[[:space:]]\+/\t/g'" u 1:2:5 with filledcurves  fs empty  ti "" ls 3 , \
-     datafile u (binc(column(colD), bin)):(1. / bin / STATS_records) smooth frequency with lines ti "frequency" ls 2
+     "< sed 's/[[:space:]]\+/\t/g' rel.txt" u 1:2 with lines ti "frequency" ls 2
