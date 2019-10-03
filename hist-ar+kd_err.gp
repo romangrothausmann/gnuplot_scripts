@@ -67,4 +67,5 @@ unset datafile separator # change back to white space for past input
 
 plot \
      "< paste low.txt upp.txt | sed 's/[[:space:]]\+/\t/g'" index 0 u 1:2:5 with filledcurves  axes x1y2 ti sprintf("%d values (abs. freq)", STATS_records) ls 3 , \
-     "< paste low.txt upp.txt | sed 's/[[:space:]]\+/\t/g'" index 1 u 1:2:5 with filledcurves  fs empty ti "(rel. freq)" ls 1
+     "< paste low.txt upp.txt | sed 's/[[:space:]]\+/\t/g'" index 1 u 1:2:5 with filledcurves  ti "(rel. freq)" ls 2 , \
+     datafile u (binc(column(colD), bin)):(1. / bin / STATS_records) smooth frequency with lines ls 1
