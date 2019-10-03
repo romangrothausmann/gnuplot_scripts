@@ -65,6 +65,6 @@ unset table
 
 ## gp-4.6: kdensity with filledcurves gets accepted but does not work (http://gnuplot.sourceforge.net/demo_cvs/violinplot.html)
 plot \
-     $absD u 1:2 with boxes axes x1y2 ti sprintf("%d values (abs. freq)", STATS_records) ls 3 , \
-     $relD u 1:2 with boxes fs empty ti "(rel. freq)" ls 1 , \
-     $kdsD u 1:2 with filledcurves ti sprintf("kdensity ({/symbol s}= %2.1f; rel. freq)", sigma) ls 2 # for gp-5.x
+     $absD u 1:2 "%lf  %lf" with boxes axes x1y2 ti sprintf("%d values (abs. freq)", STATS_records) ls 3 , \
+     $relD u 1:2 "%lf  %lf" with boxes fs empty ti "(rel. freq)" ls 1 , \
+     $kdsD u 1:2 "%lf  %lf" with filledcurves ti sprintf("kdensity ({/symbol s}= %2.1f; rel. freq)", sigma) ls 2 # for gp-5.x
