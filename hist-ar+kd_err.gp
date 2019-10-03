@@ -3,6 +3,8 @@
 if (!( GPVAL_VERSION >= 5.1 || ( GPVAL_VERSION == 5.0 && GPVAL_PATCHLEVEL >= 4) )) {print "This script needs at least gnuplot-5.0.4\n"; exit;}
 
 if (!exists("datafile")) datafile='default.dat' # http://gnuplot.sourceforge.net/docs_4.2/node60.html
+if (!exists("datafileL")) datafile='default_low.dat'
+if (!exists("datafileU")) datafile='default_upp.dat'
 if (!exists("outfile")) outfile='hist-ar+kd.svg' # use ARG0."svg" for gp-5:  http://stackoverflow.com/questions/12328603/how-to-pass-command-line-argument-to-gnuplot#31815067
 if (!exists("xlabel")) xlabel='UNSPECIFIED'
 if (!exists("bin")) bin=17
@@ -51,16 +53,22 @@ set style line 3 dt 1 lc rgb "#0000ff"
 
 set style circle radius 1.1 # http://stackoverflow.com/questions/34532568/gnuplot-how-to-make-scatter-plots-with-transparent-points#34533791
 
-set table $absD
-plot "" u (binc(column(colD), bin)):(1) smooth frequency
+set table $absD  # single plot command avoids the need for append
+plot datafile  u (binc(column(colD), bin)):(1) smooth frequency, \
+     datafileL u (binc(column(colD), bin)):(1) smooth frequency, \
+     datafileU u (binc(column(colD), bin)):(1) smooth frequency
 unset table
 
-set table $relD
-plot "" u (binc(column(colD), bin)):(1. / bin / STATS_records) smooth frequency
+set table $relD  # single plot command avoids the need for append
+plot datafile  u (binc(column(colD), bin)):(1. / bin / STATS_records) smooth frequency, \
+     datafileL u (binc(column(colD), bin)):(1. / bin / STATS_records) smooth frequency, \
+     datafileU u (binc(column(colD), bin)):(1. / bin / STATS_records) smooth frequency
 unset table
 
-set table $kdsD
-plot "" u colD:(1. / STATS_records) smooth kdensity bandwidth sigma
+set table $kdsD  # single plot command avoids the need for append
+plot datafile  u colD:(1. / STATS_records) smooth kdensity bandwidth sigma, \
+     datafileL u colD:(1. / STATS_records) smooth kdensity bandwidth sigma, \
+     datafileU u colD:(1. / STATS_records) smooth kdensity bandwidth sigma
 unset table
 
 ## gp-4.6: kdensity with filledcurves gets accepted but does not work (http://gnuplot.sourceforge.net/demo_cvs/violinplot.html)
