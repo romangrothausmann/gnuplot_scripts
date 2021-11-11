@@ -30,8 +30,8 @@ print GPVAL_Y_MAX, GPVAL_DATA_Y_MAX
 
 
 ## negative range for scattered points: http://www.gnuplot.info/demo/smooth.html
-set yrange  [-0.0006:GPVAL_Y_MAX] # or [0:GPVAL_DATA_Y_MAX], without some small boxes might vanish!
-set y2range [-0.0006 * bin * STATS_records:GPVAL_Y_MAX * bin * STATS_records] #scale yrange to make y2range graph (abs) coincide with relative
+set yrange  [-0.05 * 2:GPVAL_Y_MAX] # or [0:GPVAL_DATA_Y_MAX], without some small boxes might vanish!
+set y2range [-0.05 * 2 * bin * STATS_records:GPVAL_Y_MAX * bin * STATS_records] #scale yrange to make y2range graph (abs) coincide with relative
 
 set title "kernel-density, relative and absolut frequency plot"
 set xlabel xlabel
@@ -53,7 +53,7 @@ set style circle radius 1.1 # http://stackoverflow.com/questions/34532568/gnuplo
 
 ## gp-4.6: kdensity with filledcurves gets accepted but does not work (http://gnuplot.sourceforge.net/demo_cvs/violinplot.html)
 plot \
-     "" u col:(0.0002*rand(0)-.00045) with circles fs fill transparent solid 0.35 noborder lc 'black' t '', \
+     "" u col:(-0.05*rand(0)-0.05/2):(0.09) with circles fs fill transparent solid 0.35 noborder lc 'black' t '', \
      "" u (binc(column(col), bin)):(1) axes x1y2 smooth frequency with boxes ti sprintf("%d values (abs. freq)", STATS_records) ls 3 , \
      "" u (binc(column(col), bin)):(1. / bin / STATS_records) smooth frequency with boxes fs empty ti "(rel. freq)" ls 1 , \
      "" u col:(1. / STATS_records) smooth kdensity bandwidth sigma with filledcurves y=0 ti sprintf("kdensity ({/symbol s}= %2.1f; rel. freq)", sigma) ls 2 # for gp-5.x
